@@ -1,6 +1,7 @@
 package com.pholser.junit.parameters.random;
 
 public interface SourceOfRandomness {
+	
     boolean nextBoolean();
 
     void nextBytes(byte[] bytes);
@@ -20,4 +21,6 @@ public interface SourceOfRandomness {
     long nextLong();
 
     void setSeed(long seed);
+
+	<T> T oneOf(T... items);
 }
