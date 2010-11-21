@@ -1,5 +1,11 @@
 package com.pholser.junit.parameters.random;
 
+import static java.lang.Math.min;
+import static java.util.Arrays.asList;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 abstract class AbstractJDKSourceOfRandomness implements SourceOfRandomness {
@@ -57,11 +63,31 @@ abstract class AbstractJDKSourceOfRandomness implements SourceOfRandomness {
 	}
 
 	@Override
+	public String nextString() {
+		return new String(nextBytes(nextInt(1024)));
+	}
+
+	@Override
 	public void setSeed(long seed) {
 		random.setSeed(seed);
 	}
 
 	public <T> T oneOf(T... items) {
-		return items[nextInt(items.length)];
+		return oneOf(asList(items));
 	}
+
+	public <T> T oneOf(List<T> items) {
+		return items.get(nextInt(items.size()));
+	}
+
+	public <T> List<T> pickUpTo(int number, List<T> items) {
+		return pick(nextInt(number), items);
+	}
+
+	public <T> List<T> pick(int number, List<T> items) {
+		List<T> itemsCopy = new ArrayList<T>(items);
+		Collections.shuffle(itemsCopy, random);
+		return itemsCopy.subList(0, min(number, items.size()));
+	}
+
 }
